@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_color"
+    android:orientation="vertical"
+    tools:context=".view.fragment.SettingsFragment">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="123dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:id="@+id/imageProfile"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_baseline_person_profile"/>
+
+    <TextView
+        android:id="@+id/username_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:text="User"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/no_hp_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:text="082162931803"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"/>
+    <TextView
+        android:id="@+id/alamat_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:ems="10"
+        android:text="Jalan Babarsari"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"/>
+
+    <Button
+        android:layout_marginTop="30dp"
+        android:id="@+id/button_edit_settings"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="120dp"
+        android:backgroundTint="@color/settings_edit_button"
+        android:layout_height="wrap_content"
+        android:text="Edit Profile"/>
+
+    <Button
+        android:layout_marginTop="40dp"
+        android:id="@+id/keluar_settings"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="120dp"
+        android:backgroundTint="@color/button_color"
+        android:layout_height="wrap_content"
+        android:text="Keluar"/>
+
+
+
+</LinearLayout>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/text_color"
+    tools:context=".view.activity.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:fontFamily="@font/poppins_regular"
+            android:layout_marginTop="45dp"
+            android:layout_marginLeft="45dp"
+            android:text="Tiot."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:fontFamily="@font/poppins_semibold"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="35dp"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:text="Masuk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:fontFamily="@font/poppins_regular"
+            android:textStyle="normal"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="40dp"
+            android:text="Isikan username dan password anda"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_baseline_person"
+            android:id="@+id/textField_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="username">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="5dp"
+            app:startIconDrawable="@drawable/ic_baseline_key"
+            android:id="@+id/textField_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/pasword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:backgroundTint="@color/button_color"
+            android:text="Masuk"
+            android:id="@+id/login_home"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="center"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/poppins_regular"
+                android:text="Tidak Punya Akun?"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:textColor="@color/button_color"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:fontFamily="@font/poppins_bold"
+                android:id="@+id/daftar"
+                android:text="Daftar"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            tools:ignore="UselessLeaf" />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+</LinearLayout>

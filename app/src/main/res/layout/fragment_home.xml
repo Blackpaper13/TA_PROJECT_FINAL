@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/text_color"
+    android:orientation="vertical"
+    tools:context=".view.fragment.HomeFragment">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="45dp"
+        android:id="@+id/imageProfile"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_baseline_person_profile"/>
+    <TextView
+        android:id="@+id/text_show_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Selamat datang, User"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:text="Berikut adalah kondisi terkini Kost anda"
+        android:fontFamily="@font/poppins_semibold"
+        android:textAlignment="center"/>
+
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_margin="30dp"
+            android:background="@drawable/shape_create"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_electric"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="25.71 Watt"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rp 17.525,35"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="30dp"
+            android:background="@drawable/shape_create"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_door_sliding_24"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Terbuka"
+                android:id="@+id/pintu"/>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_margin="30dp"
+            android:background="@drawable/shape_create"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_electric"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="25.71 Watt"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rp 17.525,35"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="30dp"
+            android:background="@drawable/shape_create"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_door_sliding_24"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Terbuka"/>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:gravity="center_horizontal"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_margin="30dp"
+            android:background="@drawable/shape_create"
+            android:layout_width="120dp"
+            android:layout_height="100dp"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_electric"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="25.71 Watt"/>
+            <TextView
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins_semibold"
+                android:textAlignment="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Rp 17.525,35"/>
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
