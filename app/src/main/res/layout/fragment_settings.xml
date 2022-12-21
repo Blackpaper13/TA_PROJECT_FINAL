@@ -21,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textSize="20sp"
-        android:text="User"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins_semibold"
         android:textAlignment="center"/>
@@ -31,7 +30,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:textSize="20sp"
-        android:text="082162931803"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins_semibold"
         android:textAlignment="center"/>
@@ -42,7 +40,6 @@
         android:layout_marginTop="10dp"
         android:textSize="20sp"
         android:ems="10"
-        android:text="Jalan Babarsari"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins_semibold"
         android:textAlignment="center"/>
