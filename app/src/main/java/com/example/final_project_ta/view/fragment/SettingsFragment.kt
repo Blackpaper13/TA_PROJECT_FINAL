@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.final_project_ta.databinding.FragmentSettingsBinding
 import com.example.final_project_ta.view.activity.EditProfileActivity
 import com.example.final_project_ta.view.activity.LoginActivity
@@ -33,22 +34,7 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         return binding.root
 
-        readData()
-    }
 
-    private fun readData() {
-        val username = binding.usernameSettings.text.toString()
-        database = FirebaseDatabase.getInstance().getReference("Users")
-        database.child("username").get().addOnSuccessListener {
-            if (it.exists()) {
-                val username = it.child("username").value.toString()
-                val telepon = it.child("phone").value.toString()
-                val alamat = it.child("address").value.toString()
-
-                binding.usernameSettings.text = username
-
-            }
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,6 +42,9 @@ class SettingsFragment : Fragment() {
 
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
+
+        database = FirebaseDatabase.getInstance().getReference("Users")
+        getData()
 
 
         binding.keluarSettings.setOnClickListener {
@@ -72,6 +61,28 @@ class SettingsFragment : Fragment() {
                 Intent(this@SettingsFragment.requireContext(), EditProfileActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun getData() {
+        database.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (ds in snapshot.children) {
+                    val id = ds.key
+                    val username = ds.child("username").value.toString()
+                    val telepon = ds.child("phone").value.toString()
+                    val alamat = ds.child("address").value.toString()
+
+                    binding.usernameSettings.text = username
+                    binding.noHpSettings.text = telepon
+                    binding.alamatSettings.text = alamat
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(activity, "Failed Load Data", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 
 
