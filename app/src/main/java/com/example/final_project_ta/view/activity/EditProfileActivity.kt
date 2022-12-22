@@ -1,8 +1,13 @@
 package com.example.final_project_ta.view.activity
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.final_project_ta.R
 import com.example.final_project_ta.databinding.ActivityEditProfileBinding
@@ -12,7 +17,17 @@ import com.example.final_project_ta.view.fragment.SettingsFragment
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
-    private val REQUEST_CODE_GALLERY = 100
+    companion object{
+        private const val CAMERA_REQUEST_CODE = 100
+        private const val STORAGE_REQUEST_CODE = 101
+
+        private const val TAG = "MAIN_TAG"
+    }
+
+    private lateinit var cameraPermissions: Array<String>
+    private lateinit var storagePermissions: Array<String>
+
+    private var imageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +47,28 @@ class EditProfileActivity : AppCompatActivity() {
     private fun openGalleryForImage() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        startActivityForResult(intent, REQUEST_CODE_GALLERY)
+        galleryActivityResultLauncher.launch(intent)
     }
+
+    private val galleryActivityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ){result ->
+        if (result.resultCode == Activity.RESULT_OK){
+            val data = result.data
+
+            imageUri = data!!.data
+            Log.d(TAG,"galleryActivityResultLauncher: imageUri: $imageUri")
+
+            binding.imageChangeProfile.setImageURI(imageUri)
+
+        }else {
+            showToast("Dibatalkan ..............")
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this,message, Toast.LENGTH_SHORT).show()
+    }
+
 
 }
