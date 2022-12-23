@@ -61,13 +61,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 else {
                         database = FirebaseDatabase.getInstance().getReference("Users")
-                        val userId = database.push().key
-                        val User = userId?.let { Pengguna(it, email, username, fullname, birth, phone, address, password) }
-                        if (userId != null) {
-                            database.child(userId).setValue(User).addOnCompleteListener {
+                        val User = Pengguna(email, username, fullname, birth, phone, address, password)
+                        database.child(username).setValue(User).addOnCompleteListener {
                                 registrasiUser(email,password)
                             }
-                        }
+
 //                    val intent = Intent(applicationContext, LoginActivity::class.java)
 //                    startActivity(intent)
                 }
@@ -110,7 +108,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun sendEmailVerification() {
         val user = auth.currentUser
-
         user?.sendEmailVerification()?.addOnSuccessListener {
             Toast.makeText(this@RegisterActivity, "Verifikasi Email telah terkirim .....", Toast.LENGTH_SHORT).show()
         }

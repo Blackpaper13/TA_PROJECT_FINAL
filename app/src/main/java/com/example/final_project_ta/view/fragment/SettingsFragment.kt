@@ -13,6 +13,7 @@ import com.example.final_project_ta.view.activity.LoginActivity
 import com.example.final_project_ta.model.Pengguna
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 
 
 class SettingsFragment : Fragment() {
@@ -43,8 +44,17 @@ class SettingsFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
 
-        database = FirebaseDatabase.getInstance().getReference("Users")
-        getData()
+        if (user != null) {
+            if (user.photoUrl == null){
+                Picasso.get().load("https://picsum.photos/seed/picsum/200/300").into(binding.imageProfile)
+            }else{
+                Picasso.get().load(user.photoUrl).into(binding.imageProfile)
+            }
+
+            database = FirebaseDatabase.getInstance().getReference("Users")
+            getData()
+        }
+
 
 
         binding.keluarSettings.setOnClickListener {
@@ -57,17 +67,18 @@ class SettingsFragment : Fragment() {
         }
 
         binding.buttonEditSettings.setOnClickListener {
-            val intent =
-                Intent(this@SettingsFragment.requireContext(), EditProfileActivity::class.java)
+            val intent = Intent(this@SettingsFragment.requireContext(), EditProfileActivity::class.java)
             startActivity(intent)
+
+
         }
     }
+
 
     private fun getData() {
         database.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds in snapshot.children) {
-                    val id = ds.key
                     val username = ds.child("username").value.toString()
                     val telepon = ds.child("phone").value.toString()
                     val alamat = ds.child("address").value.toString()

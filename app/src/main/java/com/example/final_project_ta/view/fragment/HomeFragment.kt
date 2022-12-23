@@ -11,6 +11,7 @@ import com.example.final_project_ta.databinding.FragmentHomeBinding
 import com.example.final_project_ta.model.Pengguna
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 
 
 class HomeFragment : Fragment() {
@@ -38,15 +39,23 @@ class HomeFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
         val user = auth.currentUser
 
-        database = FirebaseDatabase.getInstance().getReference("Users")
-        getData()
+        if (user != null) {
+            if (user.photoUrl == null){
+                Picasso.get().load("https://picsum.photos/seed/picsum/200/300").into(binding.imageProfile)
+            }else{
+                Picasso.get().load(user.photoUrl).into(binding.imageProfile)
+            }
+            database = FirebaseDatabase.getInstance().getReference("Users")
+            getData()
+        }
+
+
     }
 
     private fun getData() {
         database.addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (ds in snapshot.children){
-                    val id = ds.key
                     val username = ds.child("username").value.toString()
 
                     binding.textShowUsername.text = username
