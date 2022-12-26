@@ -2,4 +2,9 @@
     <string name="app_name">final_project_TA</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="alert">Diawal dengan Huruf,
+                        memiliki 1 huruf Besar,
+                        1 huruf Special ,
+                        tidak boleh kosong dan spasi,
+                        lebih dari 6 buah huruf</string>
 </resources>

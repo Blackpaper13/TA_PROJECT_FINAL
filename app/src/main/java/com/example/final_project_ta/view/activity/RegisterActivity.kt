@@ -1,7 +1,9 @@
 package com.example.final_project_ta.view.activity
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,16 +14,27 @@ import com.example.final_project_ta.R
 import com.example.final_project_ta.databinding.ActivityRegisterBinding
 import com.example.final_project_ta.model.Pengguna
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import java.util.*
+import java.util.regex.Pattern
 
-@Suppress("NAME_SHADOWING")
+@Suppress("DEPRECATION")
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding : ActivityRegisterBinding
     private lateinit var auth : FirebaseAuth
-    private lateinit var database : DatabaseReference
+    private lateinit var database: DatabaseReference
+    val PASSWORD_PATTERN = Pattern.compile("^" +
+            "(?=.*[0-9])" +         //at least 1 digit
+            "(?=.*[a-z])" +         //at least 1 lower case letter
+            "(?=.*[A-Z])" +         //at least 1 upper case letter
+            "(?=.*[a-zA-Z])" +      //any letter
+            "(?=.*[@#$%^&+=])" +    //at least 1 special character
+            "(?=\\S+$)" +           //no white spaces
+            ".{8,}" +               //at least 8 characters
+            "$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +42,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
+
 
         binding.registerBirth.setOnClickListener(this)
         binding.registerSubmit.setOnClickListener(this)
@@ -40,36 +55,83 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         when(v?.id){
             R.id.register_submit -> {
                 //inisalisasi Item untuk registrasi pengguna
-                val email = binding.registerEmail.editableText.toString().trim()
-                val username = binding.registerUsername.editableText.toString().trim()
-                val fullname = binding.registerFullname.editableText.toString().trim()
-                val birth = binding.registerBirth.editableText.toString().trim()
-                val phone = binding.registerPhone.editableText.toString().trim()
-                val address = binding.registerAddress.editableText.toString().trim()
-                val password = binding.registerPassword.editableText.toString().trim()
+                                val email = binding.registerEmail.editableText.toString()
+                                val username = binding.registerUsername.editableText.toString()
+                                val fullname = binding.registerFullname.editableText.toString()
+                                val birth = binding.registerBirth.editableText.toString()
+                                val phone = binding.registerPhone.editableText.toString()
+                                val address = binding.registerAddress.editableText.toString()
+                                val password = binding.registerPassword.editableText.toString()
 
-                if(email.isEmpty() || username.trim().isEmpty()  || fullname.isEmpty()  || birth.isEmpty()
-                    || phone.isEmpty() || address.isEmpty()  || password.isEmpty() ){
-                    Toast.makeText(this, "Registrasi Harus Lengkap dahulu",Toast.LENGTH_SHORT).show()
-                } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.registerEmail.editableText.toString().trim()).matches()){
-                    binding.registerEmail.error = "Email isn't Valid"
-                    binding.registerEmail.requestFocus()
-                }
-                else if (binding.registerPassword.editableText.toString().trim().isEmpty() || binding.registerPassword.editableText.toString().trim().length < 8){
-                    binding.registerPassword.error = "Password Harus Terisi atau Password Kurang dari 8 karakter"
-                    binding.registerPassword.requestFocus()
-                }
-                else {
-                        database = FirebaseDatabase.getInstance().getReference("Users")
-                        val User = Pengguna(email, username, fullname, birth, phone, address, password)
-                        database.child(username).setValue(User).addOnCompleteListener {
-                                registrasiUser(email,password)
+                                if (username.isEmpty()){
+                                    binding.registerUsername.error  = "Username harus diisi"
+                                    binding.registerUsername.requestFocus()
+                                }
+                                else if (fullname.isEmpty()){
+                                    binding.registerFullname.error = "Silakan isi Nama Lengkap anda"
+                                    binding.registerFullname.requestFocus()
+                                }else if (birth.isEmpty()){
+                                    binding.registerBirth.error  = "Silakan isi tanggal lahir anda"
+                                    binding.registerBirth.requestFocus()
+                                }
+                                else if (phone.isEmpty() && !Patterns.PHONE.matcher(phone).matches()){
+                                    binding.registerPhone.error = "No Telepon Harus benar dan terisi"
+                                    binding.registerPhone.requestFocus()
+                                }
+                                else if (address.isEmpty()){
+                                    binding.registerAddress.error = "Alamat Harus diisi"
+                                    binding.registerAddress.requestFocus()
+                                }
+                                //Email Checking
+                                else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                                    binding.registerEmail.error = "Email Tidak Valid"
+                                    binding.registerEmail.requestFocus()
+                                }
+                                else if (email.isEmpty()){
+                                    binding.registerEmail.error = "Belum terisi"
+                                    binding.registerEmail.requestFocus()
+                                }
+                                //password Checking
+                                else if (password.isEmpty()){
+                                    binding.registerPassword.error = "Password Tidak Terisi"
+                                    binding.registerPassword.requestFocus()
+                                }
+                                else if (!PASSWORD_PATTERN.matcher(password).matches()){
+                                    val builder = AlertDialog.Builder(this)
+                                    builder.setTitle("Perhatikan Password")
+                                    builder.setMessage(R.string.alert)
+                                    builder.setIcon(R.drawable.ic_baseline_add_alert_24)
+                                    builder.setNeutralButton("Back"){dialogInterface, which ->
+                                        showToast("Selesai baca Ketentuan")
+                                    }
+                                    val alertDialog = builder.create()
+                                    alertDialog.setCancelable(false)
+                                    alertDialog.show()
+
+                                }
+                                else if (password.length <= 6){
+                                    binding.registerPassword.error = "Password Harus Lebih dari 6"
+                                    binding.registerEmail.requestFocus()
+                                }else{
+                                    val progressDialog = ProgressDialog(this@RegisterActivity)
+                                    progressDialog.setTitle("Loading")
+                                    progressDialog.setMessage("Silakan ditunggu ya")
+                                    progressDialog.setCanceledOnTouchOutside(false)
+                                    progressDialog.show()
+                                    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                                        if (task.isSuccessful){
+                                            registerUserInfo(email, username, fullname, birth, phone, address, password)
+                                            sendEmailVerification()
+                                        }else {
+                                            val message =task.exception!!.toString()
+                                            Toast.makeText(this, "Error: $message", Toast.LENGTH_SHORT).show()
+                                            FirebaseAuth.getInstance().signOut()
+                                            progressDialog.dismiss()
+                                        }
+                                    }
+                                }
+
                             }
-
-//                    val intent = Intent(applicationContext, LoginActivity::class.java)
-//                    startActivity(intent)
-                }
-            }
             R.id.login -> {
                 val intent = Intent(applicationContext, LoginActivity::class.java)
                 startActivity(intent)
@@ -82,35 +144,32 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
-    private fun registrasiUser(email: String, password: String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (it.isSuccessful) {
-                    binding.registerEmail.text?.clear()
-                    binding.registerUsername.text?.clear()
-                    binding.registerFullname.text?.clear()
-                    binding.registerBirth.text?.clear()
-                    binding.registerPhone.text?.clear()
-                    binding.registerAddress.text?.clear()
-                    binding.registerPassword.text?.clear()
-                    Toast.makeText(this, "Success Registration", Toast.LENGTH_SHORT).show()
-                    sendEmailVerification()
-                    Intent(this@RegisterActivity, LoginActivity::class.java).also { it ->
-                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(it)
-                    }
-                }else {
-                    Toast.makeText(this, "Register Gagal Silakan Dicoba ulang", Toast.LENGTH_SHORT).show()
-                }
-            }
+    //masuk proses Registrasi Kedalam Database Realtime Firebase setelah FirebaseAuth
+    private fun registerUserInfo(email: String, username: String, fullname: String, birth: String, phone: String, address: String, password: String) {
+        val user = Pengguna( email, username, fullname, birth, phone, address, password)
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        database.child("Users").child(userId).setValue(user)
     }
 
+    //
     private fun sendEmailVerification() {
         val user = auth.currentUser
         user?.sendEmailVerification()?.addOnSuccessListener {
-            Toast.makeText(this@RegisterActivity, "Verifikasi Email telah terkirim .....", Toast.LENGTH_SHORT).show()
+            showToast("Verifikasi Email telah terkirim .....")
+        }!!.addOnFailureListener {
+            showToast("Gagal Verifikasi. Silakan Periksa email anda apakah aktif")
         }
+        auth.signOut()
+        showToast("Berhasil Registrasi")
+        Intent(this@RegisterActivity, LoginActivity::class.java).also {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+        }
+        finish()
+    }
+
+    private fun showToast(s: String) {
+        Toast.makeText(applicationContext, s, Toast.LENGTH_SHORT).show()
     }
 
 
@@ -120,7 +179,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
-        val datapd = DatePickerDialog(this, { view, year, month, dayOfMonth ->
+        val datapd = DatePickerDialog(this, { _, year, month, dayOfMonth ->
             binding.registerBirth.setText("$dayOfMonth-$month-$year").toString()
         }, year, month, day)
         datapd.show()

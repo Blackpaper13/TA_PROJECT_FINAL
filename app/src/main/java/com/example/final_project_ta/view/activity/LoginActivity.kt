@@ -40,8 +40,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     binding.username.error="Email tidak valid"
                     binding.username.requestFocus()
                 }
-                else if (password.isEmpty() || password.length < 8){
-                    binding.pasword.error = "Password Kosong atau Password Kurang dari 8"
+                else if (password.isEmpty() || password.length <= 6){
+                    binding.pasword.error = "Password Kosong atau Password harus lebih dari 6"
                     binding.pasword.requestFocus()
                 }
                 else {
@@ -53,6 +53,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val intent = Intent(applicationContext, RegisterActivity::class.java)
                 startActivity(intent)
             }
+            R.id.lupaPassword -> {
+
+            }
         }
     }
 
@@ -60,12 +63,17 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         auth.signInWithEmailAndPassword(username, password)
             .addOnCompleteListener {
                 if (it.isSuccessful){
-                    Intent(this@LoginActivity, MainActivity::class.java).also {
-                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        startActivity(it)
+                    val firebaseEmailVerif = auth.currentUser
+                    if (firebaseEmailVerif!!.isEmailVerified){
+                        Intent(this@LoginActivity, MainActivity::class.java).also { it ->
+                            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(it)
+                        }
+                    }else {
+                        Toast.makeText(this, "Email Belum Di verifikasi silalkan check email anda", Toast.LENGTH_SHORT).show();
                     }
                 }else {
-                    Toast.makeText(this, "Login karena ${it.exception?.message} Gagal Silakan Dicoba ulang", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Gagal Login karena Email atau Password salah. Silakan Dicoba ulang", Toast.LENGTH_SHORT).show()
                 }
             }
     }
@@ -74,9 +82,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     override fun onStart() {
         super.onStart()
         if (auth.currentUser != null) {
-            Intent(this@LoginActivity, MainActivity::class.java).also {
-                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(it)
+            if (auth.currentUser!!.isEmailVerified) {
+                Intent(this@LoginActivity, MainActivity::class.java).also {
+                    it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    startActivity(it)
+                }
+            }else {
+                auth.signOut()
             }
         }
     }

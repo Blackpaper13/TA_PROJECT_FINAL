@@ -61,7 +61,6 @@
         <com.google.android.material.textfield.TextInputEditText
             style="@style/ThemeOverlay.Material3.TextInputEditText.OutlinedBox"
             android:id="@+id/profile_username"
-            android:enabled="false"
             android:fontFamily="@font/poppins_regular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

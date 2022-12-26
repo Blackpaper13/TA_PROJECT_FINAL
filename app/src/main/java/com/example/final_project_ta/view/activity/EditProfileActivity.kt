@@ -13,10 +13,11 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.final_project_ta.databinding.ActivityEditProfileBinding
-import com.example.final_project_ta.model.Pengguna
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.*
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
@@ -32,7 +33,6 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var imageUri: Uri
     private lateinit var auth: FirebaseAuth
     private lateinit var database : DatabaseReference
-    private var list = mutableListOf<Pengguna>()
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,9 +41,10 @@ class EditProfileActivity : AppCompatActivity() {
         binding = ActivityEditProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
-        database = FirebaseDatabase.getInstance().getReference("Users")
         val user = auth.currentUser
+
         if (user != null) {
             if (user.photoUrl == null) {
                 Picasso.get().load("https://picsum.photos/seed/picsum/200/300").into(binding.imageChangeProfile)
@@ -56,10 +57,10 @@ class EditProfileActivity : AppCompatActivity() {
 
         //simpan perubahan Profil
         binding.buttonSaveChangeProfil.setOnClickListener {
-            val nama_lengkap = binding.profileNama.editableText.toString().trim()
-            val username = binding.profileUsername.editableText.toString().trim()
-            val alamat = binding.profileAlamat.editableText.toString().trim()
-            val no_hp = binding.profilePhone.editableText.toString().trim()
+            val nama_lengkap = binding.profileNama.editableText.toString()
+            val username = binding.profileUsername.editableText.toString()
+            val alamat = binding.profileAlamat.editableText.toString()
+            val no_hp = binding.profilePhone.editableText.toString()
 
             uploadDataProfil(nama_lengkap, username, alamat, no_hp)
 
@@ -95,42 +96,35 @@ class EditProfileActivity : AppCompatActivity() {
     //proses upload profil
     @SuppressLint("SuspiciousIndentation")
     private fun uploadDataProfil(namaLengkap: String, username: String, alamat: String, noHp: String) {
-        val User =  mapOf<String, String>(
+        val User =  mapOf(
                 "fullname" to namaLengkap,
                 "username" to username,
                 "address" to alamat,
                 "phone" to noHp )
-             database.child(username).updateChildren(User).addOnCompleteListener {
-                binding.profileNama.editableText.clear()
-                binding.profileUsername.editableText.clear()
-                binding.profileAlamat.editableText.clear()
-                binding.profilePhone.editableText.clear()
-                Toast.makeText(this, "Success Update Profil", Toast.LENGTH_SHORT).show()
+            val userId = auth.currentUser!!.uid
+            database.child(userId).updateChildren(User).addOnSuccessListener {
+                showToast("berhasil Update data")
+            }.addOnFailureListener {
+                showToast("Gagal Update Data anda")
             }
+
     }
 
     private fun getData() {
-        database.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (ds in snapshot.children) {
-                    val nama_lengkap = ds.child("fullname").value.toString()
-                    val username = ds.child("username").value.toString()
-                    val alamat = ds.child("address").value.toString()
-                    val telepon = ds.child("phone").value.toString()
+        val userId = auth.currentUser!!.uid
+        database.child(userId).get().addOnSuccessListener {
+            val fullname = it.child("fullname").value.toString()
+            val username = it.child("username").value.toString()
+            val alamat = it.child("address").value.toString()
+            val telepon = it.child("phone").value.toString()
 
-                    binding.profileNama.setText(nama_lengkap)
-                    binding.profileUsername.setText(username)
-                    binding.profileAlamat.setText(alamat)
-                    binding.profilePhone.setText(telepon)
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-               showToast("Failed Upload Profile")
-            }
-
-        })
+            binding.profileNama.setText(fullname)
+            binding.profileUsername.setText(username)
+            binding.profileAlamat.setText(alamat)
+            binding.profilePhone.setText(telepon)
+        }.addOnFailureListener {
+            showToast("Failed Load Data")
+        }
     }
 
 

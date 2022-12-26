@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Final_project_TA"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".view.activity.EditProfileActivity"

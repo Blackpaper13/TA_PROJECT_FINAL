@@ -1,11 +1,11 @@
 package com.example.final_project_ta.model
 
 data class Pengguna(
-        val email: String,
-        val username: String,
-        val fullname: String,
-        val birth: String,
-        val phone: String,
-        val address: String,
-        val password : String
+    val email: String? =null,
+    val username: String? =null,
+    val fullname: String? =null,
+    val birth: String? =null,
+    val phone: String? =null,
+    val address: String? =null,
+    val password: String? =null
 )
