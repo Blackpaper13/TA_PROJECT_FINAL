@@ -53,9 +53,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 val intent = Intent(applicationContext, RegisterActivity::class.java)
                 startActivity(intent)
             }
-            R.id.lupaPassword -> {
 
-            }
         }
     }
 
@@ -70,6 +68,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                             startActivity(it)
                         }
                     }else {
+                            val user = auth.currentUser
+                            user?.sendEmailVerification()?.addOnSuccessListener {
+                                showToast("Verifikasi Email telah terkirim .....")
+                            }!!.addOnFailureListener {
+                                showToast("Gagal Verifikasi. Silakan Periksa email anda apakah aktif")
+                            }
                         Toast.makeText(this, "Email Belum Di verifikasi silalkan check email anda", Toast.LENGTH_SHORT).show();
                     }
                 }else {
@@ -91,5 +95,8 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 auth.signOut()
             }
         }
+    }
+    private fun showToast(s: String) {
+        Toast.makeText(applicationContext, s, Toast.LENGTH_SHORT).show()
     }
 }
