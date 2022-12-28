@@ -171,6 +171,7 @@
             android:id="@+id/password_register_layout"
             android:layout_gravity="center"
             android:layout_width="300dp"
+            app:endIconMode="password_toggle"
             android:layout_height="wrap_content"
             android:hint="Password">
 

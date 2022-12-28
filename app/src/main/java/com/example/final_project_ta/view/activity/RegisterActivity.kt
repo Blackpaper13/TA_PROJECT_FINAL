@@ -26,15 +26,17 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var binding : ActivityRegisterBinding
     private lateinit var auth : FirebaseAuth
     private lateinit var database: DatabaseReference
-    val PASSWORD_PATTERN = Pattern.compile("^" +
+    private val PASSWORD_PATTERN = Pattern.compile("^" +
             "(?=.*[0-9])" +         //at least 1 digit
             "(?=.*[a-z])" +         //at least 1 lower case letter
             "(?=.*[A-Z])" +         //at least 1 upper case letter
             "(?=.*[a-zA-Z])" +      //any letter
-            "(?=.*[@#$%^&+=])" +    //at least 1 special character
+            "(?=.*[@#$%^&+!=])" +    //at least 1 special character
             "(?=\\S+$)" +           //no white spaces
             ".{8,}" +               //at least 8 characters
             "$")
+    private val USERNAME_WHITE_SPACE = Pattern.compile("[A-Za-z0-9]+")
+    private val PHONE_DETECT = Pattern.compile("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}\$")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,21 +65,39 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                                 val address = binding.registerAddress.editableText.toString()
                                 val password = binding.registerPassword.editableText.toString()
 
+                                //val USERNAME_WHITE_SPACE = Pattern.compile("[A-Za-z0-9]+")
+                                //deteksi username
                                 if (username.isEmpty()){
                                     binding.registerUsername.error  = "Username harus diisi"
                                     binding.registerUsername.requestFocus()
                                 }
+                                else if (!USERNAME_WHITE_SPACE.matcher(username).matches()){
+                                    binding.registerUsername.error  = "Username tidak boleh ada spasi"
+                                    binding.registerUsername.requestFocus()
+                                }
+                                //deteksi fullname
                                 else if (fullname.isEmpty()){
                                     binding.registerFullname.error = "Silakan isi Nama Lengkap anda"
                                     binding.registerFullname.requestFocus()
-                                }else if (birth.isEmpty()){
+                                }
+                                //deteksi tanggal lahir
+                                else if (birth.isEmpty()){
                                     binding.registerBirth.error  = "Silakan isi tanggal lahir anda"
                                     binding.registerBirth.requestFocus()
                                 }
+                                //deteksi no telepon
                                 else if (phone.isEmpty() && !Patterns.PHONE.matcher(phone).matches()){
                                     binding.registerPhone.error = "No Telepon Harus benar dan terisi"
                                     binding.registerPhone.requestFocus()
                                 }
+                                //deteksi no Telepon tidak awali dengan 08 / +62
+                                /* val PHONE_DETECT = Pattern.compile("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}\$")
+                                 */
+                                else if (!PHONE_DETECT.matcher(phone).matches()){
+                                    binding.registerPhone.error = "No Telepon harus dimulai dengan +62, 62 atau 08"
+                                    binding.registerPhone.requestFocus()
+                                }
+                                //deteksi alamat
                                 else if (address.isEmpty()){
                                     binding.registerAddress.error = "Alamat Harus diisi"
                                     binding.registerAddress.requestFocus()
@@ -95,7 +115,17 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                                 else if (password.isEmpty()){
                                     binding.registerPassword.error = "Password Tidak Terisi"
                                     binding.registerPassword.requestFocus()
-                                }
+                                }/*
+                                val PASSWORD_PATTERN = Pattern.compile("^" +
+                                        "(?=.*[0-9])" +         //at least 1 digit
+                                        "(?=.*[a-z])" +         //at least 1 lower case letter
+                                        "(?=.*[A-Z])" +         //at least 1 upper case letter
+                                        "(?=.*[a-zA-Z])" +      //any letter
+                                        "(?=.*[@#$%^&+!=])" +    //at least 1 special character
+                                        "(?=\\S+$)" +           //no white spaces
+                                        ".{8,}" +               //at least 8 characters
+                                        "$")
+                                */
                                 else if (!PASSWORD_PATTERN.matcher(password).matches()){
                                     val builder = AlertDialog.Builder(this)
                                     builder.setTitle("Perhatikan Password")
@@ -109,10 +139,12 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                                     alertDialog.show()
 
                                 }
-                                else if (password.length <= 6){
-                                    binding.registerPassword.error = "Password Harus Lebih dari 6"
+                                else if (password.length <= 8){
+                                    binding.registerPassword.error = "Password Harus Lebih dari 8"
                                     binding.registerEmail.requestFocus()
-                                }else{
+                                }
+                                //berhasil checking
+                                else{
                                     val progressDialog = ProgressDialog(this@RegisterActivity)
                                     progressDialog.setTitle("Loading")
                                     progressDialog.setMessage("Silakan ditunggu ya")
@@ -145,7 +177,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     //masuk proses Registrasi Kedalam Database Realtime Firebase setelah FirebaseAuth
-    private fun registerUserInfo(email: String, username: String, fullname: String, birth: String, phone: String, address: String, password: String) {
+    private fun registerUserInfo(email: String, username: String, fullname: String, birth: String, phone: String, address: String, password: String)
+    {
+        //private lateinit var database: DatabaseReference
+        //database = Firebase.database.reference
         val user = Pengguna( email, username, fullname, birth, phone, address, password)
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         database.child("Users").child(userId).setValue(user)
@@ -165,7 +200,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
         }
-        finish()
     }
 
     private fun showToast(s: String) {

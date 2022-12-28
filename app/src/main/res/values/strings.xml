@@ -4,7 +4,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="alert">Diawal dengan Huruf,
                         memiliki 1 huruf Besar,
-                        1 huruf Special ,
+                        1 Karakter Special ,
                         tidak boleh kosong dan spasi,
-                        lebih dari 6 buah huruf</string>
+                        lebih dari 8 buah huruf</string>
 </resources>

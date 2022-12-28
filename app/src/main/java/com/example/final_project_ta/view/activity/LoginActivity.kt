@@ -9,11 +9,15 @@ import android.widget.Toast
 import com.example.final_project_ta.R
 import com.example.final_project_ta.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth : FirebaseAuth
+    private lateinit var database : DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,9 +25,11 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+        database = Firebase.database.reference
 
         binding.daftar.setOnClickListener(this)
         binding.loginHome.setOnClickListener(this)
+        binding.resetPassword.setOnClickListener(this)
 
     }
 
@@ -52,6 +58,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             R.id.daftar -> {
                 val intent = Intent(applicationContext, RegisterActivity::class.java)
                 startActivity(intent)
+                finish()
+            }
+            R.id.resetPassword -> {
+                val pindah = Intent(applicationContext, ResetPasswordActivity::class.java)
+                startActivity(pindah)
+                finish()
             }
 
         }
@@ -61,6 +73,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         auth.signInWithEmailAndPassword(username, password)
             .addOnCompleteListener {
                 if (it.isSuccessful){
+                    simpanPasswordFirebase(password)
                     val firebaseEmailVerif = auth.currentUser
                     if (firebaseEmailVerif!!.isEmailVerified){
                         Intent(this@LoginActivity, MainActivity::class.java).also { it ->
@@ -82,6 +95,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
     }
 
+    private fun simpanPasswordFirebase(password: String) {
+        val User =  mapOf("password" to password)
+        val userId = auth.currentUser!!.uid
+        database.child("Users").child(userId).updateChildren(User)
+    }
+
 
     override fun onStart() {
         super.onStart()
@@ -96,6 +115,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
     }
+
     private fun showToast(s: String) {
         Toast.makeText(applicationContext, s, Toast.LENGTH_SHORT).show()
     }
