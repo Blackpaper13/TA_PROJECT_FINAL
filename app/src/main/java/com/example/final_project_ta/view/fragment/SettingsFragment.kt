@@ -66,7 +66,10 @@ class SettingsFragment : Fragment() {
             val intent = Intent(context, LoginActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
-            activity?.finish()
+            activity?.run {
+                supportFragmentManager.beginTransaction().remove(this@SettingsFragment)
+                    .commitAllowingStateLoss()
+            }
         }
 
         binding.buttonEditSettings.setOnClickListener {
@@ -78,6 +81,7 @@ class SettingsFragment : Fragment() {
     private fun showToast(s: String) {
         Toast.makeText(activity, s, Toast.LENGTH_SHORT).show()
     }
+
 
 
 

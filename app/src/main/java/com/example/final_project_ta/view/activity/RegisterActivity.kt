@@ -154,6 +154,12 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                                         if (task.isSuccessful){
                                             registerUserInfo(email, username, fullname, birth, phone, address, password)
                                             sendEmailVerification()
+                                            showToast("Berhasil Registrasi")
+                                            Intent(this@RegisterActivity, LoginActivity::class.java).also {
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                                                startActivity(intent)
+                                            }
+                                            auth.signOut()
                                         }else {
                                             val message =task.exception!!.toString()
                                             Toast.makeText(this, "Error: $message", Toast.LENGTH_SHORT).show()
@@ -194,12 +200,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         }!!.addOnFailureListener {
             showToast("Gagal Verifikasi. Silakan Periksa email anda apakah aktif")
         }
-        auth.signOut()
-        showToast("Berhasil Registrasi")
-        Intent(this@RegisterActivity, LoginActivity::class.java).also {
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
+
     }
 
     private fun showToast(s: String) {
