@@ -10,6 +10,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Patterns
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.example.final_project_ta.databinding.ActivityEditProfileBinding
@@ -21,10 +22,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.io.ByteArrayOutputStream
+import java.util.regex.Pattern
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityEditProfileBinding
+
+    private val PHONE_DETECT = Pattern.compile("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}\$")
+    private val USERNAME_WHITE_SPACE = Pattern.compile("[A-Za-z0-9]+")
 
     companion object{
         private const val CAMERA_REQUEST_CODE = 100
@@ -62,29 +67,55 @@ class EditProfileActivity : AppCompatActivity() {
             val alamat = binding.profileAlamat.editableText.toString()
             val no_hp = binding.profilePhone.editableText.toString()
 
-            uploadDataProfil(nama_lengkap, username, alamat, no_hp)
-
-            val photo = when {
-                ::imageUri.isInitialized -> imageUri
-                user?.photoUrl == null -> Uri.parse("https://picsum.photos/id/237/200/300")
-                else -> user.photoUrl
+            if(nama_lengkap.isEmpty()) {
+                binding.profileNama.error = "silakan isi nama anda"
+                binding.profileNama.requestFocus()
+            } else if (username.isEmpty()){
+                binding.profileUsername.error = "silakan isi username anda"
+                binding.profileUsername.requestFocus()
+            } else if (!USERNAME_WHITE_SPACE.matcher(username).matches()){
+                binding.profileUsername.error = "username tidak boleh spasi"
+                binding.profileUsername.requestFocus()
+            } else if (alamat.isEmpty()) {
+                binding.profileAlamat.error = "silakan isi alamat anda "
+                binding.profileAlamat.requestFocus()
+            } else if (no_hp.isEmpty()) {
+                binding.profilePhone.error = "silakan isi no hp anda"
+                binding.profilePhone.requestFocus()
+            } //deteksi no telepon
+            else if (!Patterns.PHONE.matcher(no_hp).matches()){
+                binding.profilePhone.error = "No Telepon Harus benar dan terisi"
+                binding.profilePhone.requestFocus()
             }
+            //deteksi no Telepon tidak awali dengan 08 / +62
+            /* val PHONE_DETECT = Pattern.compile("^(^\\+62|62|^08)(\\d{3,4}-?){2}\\d{3,4}\$")
+             */
+            else if (!PHONE_DETECT.matcher(no_hp).matches()){
+                binding.profilePhone.error = "No Telepon harus dimulai dengan +62, 62 atau 08"
+                binding.profilePhone.requestFocus()
+            } else {
+                uploadDataProfil(nama_lengkap, username, alamat, no_hp)
 
-            UserProfileChangeRequest.Builder()
-                .setPhotoUri(photo)
-                .build().also {
-                    user?.updateProfile(it)?.addOnCompleteListener {
-                        if (it.isSuccessful){
-                            Toast.makeText(this, "Berhasil Update Profil", Toast.LENGTH_SHORT).show()
-                        }else {
-                            Toast.makeText(this, "ERROR ${it.exception?.message}", Toast.LENGTH_SHORT).show()
+                val photo = when {
+                    ::imageUri.isInitialized -> imageUri
+                    user?.photoUrl == null -> Uri.parse("https://picsum.photos/id/237/200/300")
+                    else -> user.photoUrl
+                }
+
+                UserProfileChangeRequest.Builder()
+                    .setPhotoUri(photo)
+                    .build().also {
+                        user?.updateProfile(it)?.addOnCompleteListener {
+                            if (it.isSuccessful){
+                                Toast.makeText(this, "Berhasil Update Profil", Toast.LENGTH_SHORT).show()
+                            }else {
+                                Toast.makeText(this, "ERROR ${it.exception?.message}", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
-                }
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
-
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
         }
 
         //ganti gambar Profil
