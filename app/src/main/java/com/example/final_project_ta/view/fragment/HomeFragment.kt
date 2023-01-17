@@ -1,5 +1,6 @@
 package com.example.final_project_ta.view.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,10 +52,53 @@ class HomeFragment : Fragment() {
 
         database.child("Users").child(userId).get().addOnSuccessListener {
             val username = it.child("username").value.toString()
+            val status_watt = it.child("BiayaListrik/watt").value.toString()
+            val status_watt_rupiah = it.child("BiayaListrik/kwh").value.toString()
+            val perhitungan = status_watt_rupiah.toFloat() * 1445
+            val final = perhitungan.toString()
 
             binding.textShowUsername.text = username
+            binding.statusWatt.text = "$status_watt watt"
+            binding.statusWattRupiah.text = "Rp $final"
         }.addOnFailureListener {
             showToast("failed Load Username")
+        }
+
+        database.child("test").get().addOnSuccessListener {
+            val status_pintu = it.child("ujicoba/statusGerbang").value.toString()
+            val status_suhu = it.child("dht/temperature").value.toString()
+            val status_water_tank = it.child("ujicoba/ketinggianAir").value.toString()
+            val status_jemuran = it.child("rain/statusJemuran").value.toString().toInt()
+            val nilai_air = status_water_tank.toDouble()
+
+            if (nilai_air > 15) {
+                binding.statusWaterTank.text = "Air Kosong"
+            } else if ( nilai_air > 12 && nilai_air <= 15 ) {
+                binding.statusWaterTank.text = "Terisi 20 %"
+            }else if ( nilai_air > 9 && nilai_air <= 12) {
+                binding.statusWaterTank.text = "terisi 40 %"
+            }else if (nilai_air > 6 && nilai_air <= 9 ) {
+                binding.statusWaterTank.text = "Terisi 60%"
+            }else if (nilai_air > 3 && nilai_air <=6){
+                binding.statusWaterTank.text = "Terisi 80%"
+            } else if (nilai_air > 2 && nilai_air <= 3){
+                showToast("Sudah hampir Penuh, silakan matikan Pompa Air")
+            } else if (nilai_air <=2 ){
+                binding.statusWaterTank.text = "Penuh"
+            }else {
+                showToast("nilai error")
+            }
+
+            if (status_jemuran >= 200) {
+                    binding.statusJemuran.text = "Pakaian di Jemur"
+            } else if (status_jemuran < 200) {
+                binding.statusJemuran.text = "Pakaian ditepi"
+            }
+
+            binding.statusPintu.text = status_pintu
+            binding.statusSuhu.text = "$status_suhu \u2103"
+        }.addOnFailureListener {
+            showToast("failed Load Status Sensor")
         }
 
 
