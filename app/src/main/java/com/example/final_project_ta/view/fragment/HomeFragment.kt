@@ -7,9 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.example.final_project_ta.R
 import com.example.final_project_ta.databinding.FragmentHomeBinding
-import com.example.final_project_ta.model.Pengguna
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -54,10 +52,12 @@ class HomeFragment : Fragment() {
             val username = it.child("username").value.toString()
             val status_watt = it.child("BiayaListrik/watt").value.toString()
             val status_watt_rupiah = it.child("BiayaListrik/kwh").value.toString()
+            val status_pintu = it.child("ujicoba/statusPintu").value.toString()
             val perhitungan = status_watt_rupiah.toFloat() * 1445
             val final = perhitungan.toString()
 
             binding.textShowUsername.text = username
+            binding.statusPintu.text = status_pintu
             binding.statusWatt.text = "$status_watt watt"
             binding.statusWattRupiah.text = "Rp $final"
         }.addOnFailureListener {
@@ -65,12 +65,12 @@ class HomeFragment : Fragment() {
         }
 
         database.child("test").get().addOnSuccessListener {
-            val status_pintu = it.child("ujicoba/statusGerbang").value.toString()
             val status_suhu = it.child("dht/temperature").value.toString()
             val status_water_tank = it.child("ujicoba/ketinggianAir").value.toString()
             val status_jemuran = it.child("rain/statusJemuran").value.toString().toInt()
             val nilai_air = status_water_tank.toDouble()
 
+            //pengkondisian nilai_air untuk persentase ketinggian air.
             if (nilai_air > 15) {
                 binding.statusWaterTank.text = "Air Kosong"
             } else if ( nilai_air > 12 && nilai_air <= 15 ) {
@@ -85,6 +85,9 @@ class HomeFragment : Fragment() {
                 showToast("Sudah hampir Penuh, silakan matikan Pompa Air")
             } else if (nilai_air <=2 ){
                 binding.statusWaterTank.text = "Penuh"
+                val matikan_relay_pompa = "OFF"
+                matikanRelayPompaAir(matikan_relay_pompa)
+                showToast("Sudah Penuh, akan langsung dimatikan pompanya")
             }else {
                 showToast("nilai error")
             }
@@ -95,13 +98,17 @@ class HomeFragment : Fragment() {
                 binding.statusJemuran.text = "Pakaian ditepi"
             }
 
-            binding.statusPintu.text = status_pintu
             binding.statusSuhu.text = "$status_suhu \u2103"
         }.addOnFailureListener {
             showToast("failed Load Status Sensor")
         }
 
 
+    }
+
+    private fun matikanRelayPompaAir(matikan_relay_pompa: String) {
+        val User =  mapOf("relay3" to matikan_relay_pompa)
+        database.child("test/ujicoba/relay").updateChildren(User)
     }
 
     private fun showToast(s: String) {

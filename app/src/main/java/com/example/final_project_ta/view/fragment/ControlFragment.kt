@@ -37,6 +37,8 @@ class ControlFragment : Fragment() {
         auth = FirebaseAuth.getInstance()
 
 
+
+
     }
 
 
