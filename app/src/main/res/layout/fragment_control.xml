@@ -68,11 +68,12 @@
                 android:textSize="12sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lampu Kamar Mandi"
+                android:text="Lampu Kamar "
                 android:id="@+id/pintu"/>
 
             <ToggleButton
                 android:id="@+id/tb2"
+                android:layout_marginTop="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
