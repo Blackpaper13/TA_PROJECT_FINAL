@@ -27,7 +27,6 @@ class ControlFragment : Fragment() {
     val on_status = "ON"
     val off_status = "OFF"
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,7 +75,6 @@ class ControlFragment : Fragment() {
         binding.tb3.isChecked = switch_status2
         binding.tb4.isChecked = switch_status3
         binding.tb5.isChecked = switch_status4
-
 
 
         binding.tb1.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -163,23 +161,27 @@ class ControlFragment : Fragment() {
         }
 
         binding.tb5.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                val ganti_on = mapOf("relay4" to on_status)
-                database.child("test").child("ujicoba/relay").updateChildren(ganti_on).addOnSuccessListener {
-                    Toast.makeText(activity, "ON", Toast.LENGTH_SHORT).show()
+                if (isChecked) {
+                    val ganti_on = mapOf("relay4" to on_status)
+                    database.child("test").child("ujicoba/relay").updateChildren(ganti_on)
+                        .addOnSuccessListener {
+                            Toast.makeText(activity, "ON", Toast.LENGTH_SHORT).show()
+                        }
+                    myEditor?.putBoolean(SWITCH_STATUS4, true);
+                    myEditor?.apply()
+                    binding.tb5.isChecked = true
+
+                } else {
+                    val ganti_off = mapOf("relay4" to off_status)
+                    database.child("test").child("ujicoba/relay").updateChildren(ganti_off)
+                        .addOnSuccessListener {
+                            Toast.makeText(activity, "OFF", Toast.LENGTH_SHORT).show()
+                        }
+                    myEditor?.putBoolean(SWITCH_STATUS4, false);
+                    myEditor?.apply()
+                    binding.tb5.isChecked = false
                 }
-                myEditor?.putBoolean(SWITCH_STATUS4, true);
-                myEditor?.apply()
-                binding.tb5.isChecked = true
-            }else {
-                val ganti_off =  mapOf("relay4" to off_status)
-                database.child("test").child("ujicoba/relay").updateChildren(ganti_off).addOnSuccessListener {
-                    Toast.makeText(activity, "OFF", Toast.LENGTH_SHORT).show()
-                }
-                myEditor?.putBoolean(SWITCH_STATUS4, false);
-                myEditor?.apply()
-                binding.tb5.isChecked = false
-            }
+
         }
 
 

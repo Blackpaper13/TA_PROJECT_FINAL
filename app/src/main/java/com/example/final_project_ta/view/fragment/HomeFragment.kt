@@ -1,12 +1,16 @@
 package com.example.final_project_ta.view.fragment
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
 import com.example.final_project_ta.databinding.FragmentHomeBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -23,7 +27,6 @@ class HomeFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private lateinit var database : DatabaseReference
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,7 +39,6 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         database = Firebase.database.reference
         auth = FirebaseAuth.getInstance()
         val userId = auth.currentUser!!.uid
@@ -87,7 +89,7 @@ class HomeFragment : Fragment() {
                 binding.statusWaterTank.text = "Penuh"
                 val matikan_relay_pompa = "OFF"
                 matikanRelayPompaAir(matikan_relay_pompa)
-                showToast("Sudah Penuh, akan langsung dimatikan pompanya")
+                showToast("Sudah Penuh, akan langsung dimatikan pompanya, silakan matikan button Pompa Air")
             }else {
                 showToast("nilai error")
             }
@@ -105,6 +107,7 @@ class HomeFragment : Fragment() {
 
 
     }
+
 
     private fun matikanRelayPompaAir(matikan_relay_pompa: String) {
         val User =  mapOf("relay3" to matikan_relay_pompa)
