@@ -68,22 +68,22 @@ class HomeFragment : Fragment() {
 
         database.child("test").get().addOnSuccessListener {
             val status_suhu = it.child("dht/temperature").value.toString()
-            val status_water_tank = it.child("ujicoba/ketinggianAir").value.toString()
+            val status_water_tank = it.child("ujicoba/tinggiAir").value.toString()
             val status_jemuran = it.child("rain/statusJemuran").value.toString().toInt()
-            val nilai_air = status_water_tank.toDouble()
+            val nilai_air = status_water_tank.toFloat()
 
             //pengkondisian nilai_air untuk persentase ketinggian air.
-            if (nilai_air > 15) {
+            if (nilai_air > 22.831) {
                 binding.statusWaterTank.text = "Air Kosong"
-            } else if ( nilai_air > 12 && nilai_air <= 15 ) {
+            } else if ( nilai_air > 13.67  && nilai_air <= 18.26 ) {
                 binding.statusWaterTank.text = "Terisi 20 %"
-            }else if ( nilai_air > 9 && nilai_air <= 12) {
+            }else if ( nilai_air > 9.13 && nilai_air <= 13.67) {
                 binding.statusWaterTank.text = "terisi 40 %"
-            }else if (nilai_air > 6 && nilai_air <= 9 ) {
+            }else if (nilai_air > 4.57 && nilai_air <= 9.13 ) {
                 binding.statusWaterTank.text = "Terisi 60%"
-            }else if (nilai_air > 3 && nilai_air <=6){
+            }else if (nilai_air > 2.7 && nilai_air <=4.57){
                 binding.statusWaterTank.text = "Terisi 80%"
-            } else if (nilai_air > 2 && nilai_air <= 3){
+            } else if (nilai_air > 2 && nilai_air <= 2.7){
                 showToast("Sudah hampir Penuh, silakan matikan Pompa Air")
             } else if (nilai_air <=2 ){
                 binding.statusWaterTank.text = "Penuh"

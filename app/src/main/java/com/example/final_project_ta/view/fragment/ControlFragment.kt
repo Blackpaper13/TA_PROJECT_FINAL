@@ -27,6 +27,9 @@ class ControlFragment : Fragment() {
     val on_status = "ON"
     val off_status = "OFF"
 
+    val kunci_status = "KUNCI"
+    val buka_status = "BUKA"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -79,19 +82,19 @@ class ControlFragment : Fragment() {
 
         binding.tb1.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                val ganti_on =  mapOf("statusPintu" to on_status)
+                val ganti_on =  mapOf("statusPintu" to buka_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_on).addOnSuccessListener {
-                    Toast.makeText(activity, "ON", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "pintu dikunci", Toast.LENGTH_SHORT).show()
                 }
                 myEditor?.putBoolean(SWITCH_STATUS, true);
                 myEditor?.apply()
                 binding.tb1.isChecked = true
             }else {
-                val ganti_off =  mapOf("statusPintu" to off_status)
+                val ganti_off =  mapOf("statusPintu" to kunci_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_off).addOnSuccessListener {
-                    Toast.makeText(activity, "OFF", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "pintu dibuka", Toast.LENGTH_SHORT).show()
                 }
                 myEditor?.putBoolean(SWITCH_STATUS, false);
                 myEditor?.apply()
