@@ -82,7 +82,7 @@ class ControlFragment : Fragment() {
 
         binding.tb1.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                val ganti_on =  mapOf("statusPintu" to buka_status)
+                val ganti_on =  mapOf("statusPintu" to kunci_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_on).addOnSuccessListener {
                     Toast.makeText(activity, "pintu dikunci", Toast.LENGTH_SHORT).show()
@@ -91,7 +91,7 @@ class ControlFragment : Fragment() {
                 myEditor?.apply()
                 binding.tb1.isChecked = true
             }else {
-                val ganti_off =  mapOf("statusPintu" to kunci_status)
+                val ganti_off =  mapOf("statusPintu" to buka_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_off).addOnSuccessListener {
                     Toast.makeText(activity, "pintu dibuka", Toast.LENGTH_SHORT).show()
