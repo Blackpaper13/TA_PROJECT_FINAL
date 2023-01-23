@@ -86,7 +86,7 @@ class ControlFragment : Fragment() {
                 val ganti_on =  mapOf("statusPintu" to kunci_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_on).addOnSuccessListener {
-                    Toast.makeText(activity, "pintu dikunci", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "pintu dibuka", Toast.LENGTH_SHORT).show()
                 }
                 myEditor?.putBoolean(SWITCH_STATUS, true);
                 myEditor?.apply()
@@ -95,7 +95,7 @@ class ControlFragment : Fragment() {
                 val ganti_off =  mapOf("statusPintu" to buka_status)
                 val userId = auth.currentUser!!.uid
                 database.child("Users").child(userId).child("ujicoba").updateChildren(ganti_off).addOnSuccessListener {
-                    Toast.makeText(activity, "pintu dibuka", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(activity, "pintu dikunci", Toast.LENGTH_SHORT).show()
                 }
                 myEditor?.putBoolean(SWITCH_STATUS, false);
                 myEditor?.apply()

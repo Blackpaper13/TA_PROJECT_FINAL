@@ -64,7 +64,11 @@ class HomeFragment : Fragment() {
             val final = perhitungan.toString()
 
             binding.textShowUsername.text = username
-            binding.statusPintu.text = status_pintu
+            if (status_pintu == "BUKA"){
+                binding.statusPintu.text = "KUNCI"
+            } else if (status_pintu == "KUNCI") {
+                binding.statusPintu.text = "BUKA"
+            }
             binding.statusWatt.text = "$status_watt watt"
             binding.statusWattRupiah.text = "Rp $final"
         }.addOnFailureListener {
